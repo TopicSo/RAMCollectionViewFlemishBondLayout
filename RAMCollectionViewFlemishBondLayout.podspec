@@ -2,18 +2,17 @@ Pod::Spec.new do |s|
   s.name     = 'RAMCollectionViewFlemishBondLayout'
   s.version  = '1.0.0'
   s.summary  = "UICollectionViewLayout for displaying cells in groups (highlighting one of them)."
-  s.description  = "UICollectionViewLayout for displaying cells in groups (highlighting one of them)."
+  s.description  = "RAMCollectionViewFlemishBondLayout is a UICollectionViewLayout subclass for displaying cells in groups (highlighting one of them) with optional header and footer views. Highlighted cell occupy much of the space and the remaining cells occupy space equally."
   s.author   = {'Rafael Aguilar Martin' => 'rais38@gmail.com'}
   s.homepage = 'http://www.crowsanddogs.com'
   s.source   = {:git => 'https://github.com/TopicSo/RAMCollectionViewFlemishBondLayout.git', :tag => "1.0.0"}
   s.ios.deployment_target = '6.0'
+  s.requires_arc = true
   s.source_files   = 'RAMCollectionViewFlemishBondLayout/*.{h,m}'
   s.license      = {
     :type => 'MIT',
     :text => <<-LICENSE
-                The MIT License (MIT)
-
-                Copyright (c) 2013 TopicSo
+                This code is distributed under the terms and conditions of the MIT license.
 
                 Permission is hereby granted, free of charge, to any person obtaining a copy of
                 this software and associated documentation files (the "Software"), to deal in
