@@ -27,7 +27,6 @@
 //
 
 #import "RAMCollectionViewFlemishBondLayout.h"
-#import "RAMCollectionViewFlemishBondLayoutAttributes.h"
 
 static NSString *const RAMCollectionViewFlemishBondCellKind = @"RAMCollectionViewFlemishBondCellKind";
 NSString *const RAMCollectionViewFlemishBondHeaderKind = @"RAMCollectionViewFlemishBondHeaderKind";
@@ -64,7 +63,7 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    self = [super init];
+    self = [super initWithCoder:aDecoder];
     if (self) {
         [self setup];
     }
@@ -178,7 +177,8 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
             
             RAMCollectionViewFlemishBondLayoutAttributes *layoutAttributes = [RAMCollectionViewFlemishBondLayoutAttributes layoutAttributesForCellWithIndexPath:indexPath];
             layoutAttributes.frame = [self frameForCellAtIndexPath:indexPath];
-            layoutAttributes.highlightedCell = [self isHighLightedElementAtIndexPath:indexPath] ? YES : NO;
+            layoutAttributes.highlightedCell = [self isHighLightedElementAtIndexPath:indexPath];
+            layoutAttributes.highlightedCellDirection = self.highlightedCellDirection;
             
             cellLayoutDictionary[indexPath] = layoutAttributes;
         }

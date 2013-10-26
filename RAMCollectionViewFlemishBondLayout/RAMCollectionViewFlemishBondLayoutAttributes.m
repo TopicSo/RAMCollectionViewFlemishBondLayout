@@ -34,13 +34,17 @@
 {
     RAMCollectionViewFlemishBondLayoutAttributes *attributes = [super copyWithZone:zone];
     attributes.highlightedCell = self.highlightedCell;
+    attributes.highlightedCellDirection = self.highlightedCellDirection;
     
     return attributes;
 }
 
 - (NSString *)debugDescription
 {
-    return [self.description stringByAppendingFormat:@"highlighted cell: %@", [self isHighlightedCell] ? @"Yes" : @"No"];
+    NSString *highlightedCellString = [NSString stringWithFormat:@"Highlighted cell: %@; ", [self isHighlightedCell] ? @"Yes" : @"No"];
+    NSString *highlightedCellDirectionString = [NSString stringWithFormat:@"Highlighted cell direction: %@; ", (self.highlightedCellDirection == RAMCollectionViewFlemishBondLayoutGroupDirectionLeft) ? @"Left" : @"Right"];
+    
+    return [self.description stringByAppendingFormat:@"%@%@", highlightedCellString, highlightedCellDirectionString];
 }
 
 @end

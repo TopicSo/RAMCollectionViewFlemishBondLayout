@@ -28,8 +28,14 @@
 
 #import <UIKit/UIKit.h>
 
+typedef NS_ENUM(NSUInteger, RAMCollectionViewFlemishBondLayoutGroupDirection) {
+    RAMCollectionViewFlemishBondLayoutGroupDirectionLeft,
+    RAMCollectionViewFlemishBondLayoutGroupDirectionRight
+};
+
 @interface RAMCollectionViewFlemishBondLayoutAttributes : UICollectionViewLayoutAttributes
 
 @property (nonatomic, assign, getter = isHighlightedCell) BOOL highlightedCell;
+@property (nonatomic, assign) RAMCollectionViewFlemishBondLayoutGroupDirection highlightedCellDirection;
 
 @end

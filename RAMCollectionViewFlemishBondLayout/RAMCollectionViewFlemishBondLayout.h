@@ -27,14 +27,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "RAMCollectionViewFlemishBondLayoutAttributes.h"
 
 FOUNDATION_EXPORT NSString *const RAMCollectionViewFlemishBondHeaderKind;
 FOUNDATION_EXPORT NSString *const RAMCollectionViewFlemishBondFooterKind;
-
-typedef NS_ENUM(NSUInteger, RAMCollectionViewFlemishBondLayoutGroupDirection) {
-    RAMCollectionViewFlemishBondLayoutGroupDirectionLeft,
-    RAMCollectionViewFlemishBondLayoutGroupDirectionRight
-};
 
 @class RAMCollectionViewFlemishBondLayout;
 
