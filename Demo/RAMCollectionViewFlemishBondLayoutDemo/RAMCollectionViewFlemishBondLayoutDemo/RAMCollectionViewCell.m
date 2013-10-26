@@ -45,7 +45,7 @@
 #pragma mark - Configure
 - (void)configureCellWithIndexPath:(NSIndexPath *)indexPath
 {
-    self.label.text = [NSString stringWithFormat:@"Cell %i", (indexPath.row + 1)];
+    self.label.text = [NSString stringWithFormat:@"Cell %ld", (long)(indexPath.row + 1)];
 }
 
 @end
