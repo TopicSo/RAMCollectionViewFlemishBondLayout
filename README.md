@@ -22,7 +22,7 @@
 
 ####Podfile
 
-	pod 'RAMCollectionViewFlemishBondLayout', '~> 1.0.0'
+	pod 'RAMCollectionViewFlemishBondLayout', '~> 1.0.1'
 
 ###Manual
 
