@@ -50,6 +50,7 @@ All are optional.
 # Tasks List
 * Support for more than 1 section
 * Sticky header
+* Add Item Spacing
 
 # Requirements
 
