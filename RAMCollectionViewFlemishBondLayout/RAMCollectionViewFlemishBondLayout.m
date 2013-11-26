@@ -42,6 +42,7 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 @property (nonatomic, readonly) CGFloat cellWidth;
 @property (nonatomic, readonly) CGFloat cellHeight;
 @property (nonatomic, readonly) NSInteger numberOfSections;
+@property (nonatomic, readonly) NSInteger totalGroupsInCollectionView;
 @property (nonatomic, readonly) CGFloat totalHeaderHeight;
 @property (nonatomic, readonly) CGFloat totalFooterHeight;
 @property (nonatomic, assign) RAMCollectionViewFlemishBondLayoutGroupDirection highlightedCellDirection;
@@ -85,6 +86,18 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 - (NSInteger)numberOfSections
 {
     return [self.collectionView numberOfSections];
+}
+
+- (NSInteger)totalGroupsInCollectionView
+{
+    NSInteger totalGroups = 0;
+    for (NSInteger section = 0; section < self.numberOfSections; section++) {
+        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:section];
+        
+        totalGroups += [self totalGroupsAtIndexPath:indexPath];
+    }
+    
+    return totalGroups;
 }
 
 - (CGFloat)totalHeaderHeight
@@ -150,8 +163,9 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
             NSIndexPath *indexPath = [NSIndexPath indexPathForItem:item inSection:section];
             
             if (indexPath.item == 0) {
-                if ([self.delegate conformsToProtocol:@protocol(RAMCollectionViewFlemishBondLayoutDelegate)] && [self.delegate respondsToSelector:@selector(collectionView:layout:estimatedSizeForHeaderInSection:)]) {
-                    CGSize size = [self.delegate collectionView:self.collectionView layout:self estimatedSizeForHeaderInSection:section];
+                CGSize size = [self estimatedSizeForHeaderInSection:section];
+                
+                if (!CGSizeEqualToSize(size, CGSizeZero)) {
                     self.headerSizes[indexPath] = [NSValue valueWithCGSize:size];
                     
                     UICollectionViewLayoutAttributes *headerAttributes = [UICollectionViewLayoutAttributes
@@ -162,8 +176,9 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
                     headerLayoutDictionary[indexPath] = headerAttributes;
                 }
             } else if([self isTheLastItemAtIndexPath:indexPath]) {
-                if ([self.delegate conformsToProtocol:@protocol(RAMCollectionViewFlemishBondLayoutDelegate)] && [self.delegate respondsToSelector:@selector(collectionView:layout:estimatedSizeForFooterInSection:)]) {
-                    CGSize size = [self.delegate collectionView:self.collectionView layout:self estimatedSizeForFooterInSection:section];
+                CGSize size = [self estimatedSizeForFooterInSection:section];
+                
+                if (!CGSizeEqualToSize(size, CGSizeZero)) {
                     self.footerSizes[indexPath] = [NSValue valueWithCGSize:size];
                     
                     UICollectionViewLayoutAttributes *footerAttributes = [UICollectionViewLayoutAttributes
@@ -226,7 +241,7 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 		return CGSizeZero;
 	}
     
-    return CGSizeMake(self.collectionView.bounds.size.width, (self.highlightedCellHeight * self.numberOfSections * [self totalGroupsInCollectionView]) + self.totalHeaderHeight + self.totalFooterHeight);
+    return CGSizeMake(self.collectionView.bounds.size.width, (self.highlightedCellHeight * self.totalGroupsInCollectionView) + self.totalHeaderHeight + self.totalFooterHeight);
 }
 
 - (BOOL)shouldInvalidateLayoutForBoundsChange:(CGRect)newBounds
@@ -271,13 +286,12 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 
 - (CGRect)frameForHeaderAtIndexPath:(NSIndexPath *)indexPath withSize:(CGSize)size
 {
-    CGRect frame = [self frameForCellAtIndexPath:indexPath];
-    if (frame.origin.y == size.height) {
+    CGRect frame = CGRectZero;
+    if (indexPath.section == 0) {
         frame.origin.y = 0;
     } else {
-        frame.origin.y -= frame.size.height;
+        frame.origin.y = [self getYAtIndexPath:indexPath] - size.height;
     }
-    frame.origin.x = 0.0f;
     frame.size = size;
     
     return frame;
@@ -285,9 +299,8 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 
 - (CGRect)frameForFooterAtIndexPath:(NSIndexPath *)indexPath withSize:(CGSize)size
 {
-    CGRect frame = [self frameForCellAtIndexPath:indexPath];
-    frame.origin.y += self.highlightedCellHeight;
-    frame.origin.x = 0.0f;
+    CGRect frame = CGRectZero;
+    frame.origin.y = [self getYAtIndexPath:indexPath] + self.highlightedCellHeight;
     frame.size = size;
     
     return frame;
@@ -312,8 +325,47 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
         
         yValue = ((currentGroup - 1) * self.highlightedCellHeight) + (self.cellHeight * position) + [self heightHeaderAtIndexPath:indexPathFirstElementCurrentSection];
     }
+    
+    if (indexPath.section > 0) {
+        yValue += (self.highlightedCellHeight * indexPath.section * [self totalGroupsAtIndexPath:indexPath]) + [self headerAndFooterHeightsPreviouslyAtIndexPath:indexPath];
+    }
 
     return yValue;
+}
+
+- (CGFloat)headerAndFooterHeightsPreviouslyAtIndexPath:(NSIndexPath *)indexPath
+{
+    CGFloat totalHeight = 0.f;
+    for (NSInteger section = 0; section < indexPath.section; section++) {
+        CGSize sizeHeader = [self estimatedSizeForHeaderInSection:section];
+        CGSize sizeFooter = [self estimatedSizeForFooterInSection:section];
+        
+        totalHeight += sizeHeader.height + sizeFooter.height;
+    }
+    
+    return totalHeight;
+}
+
+- (CGSize)estimatedSizeForHeaderInSection:(NSInteger)section
+{
+    CGSize size = CGSizeZero;
+    
+    if ([self.delegate conformsToProtocol:@protocol(RAMCollectionViewFlemishBondLayoutDelegate)] && [self.delegate respondsToSelector:@selector(collectionView:layout:estimatedSizeForHeaderInSection:)]) {
+        size = [self.delegate collectionView:self.collectionView layout:self estimatedSizeForHeaderInSection:section];
+    }
+    
+    return size;
+}
+
+- (CGSize)estimatedSizeForFooterInSection:(NSInteger)section
+{
+    CGSize size = CGSizeZero;
+    
+    if ([self.delegate conformsToProtocol:@protocol(RAMCollectionViewFlemishBondLayoutDelegate)] && [self.delegate respondsToSelector:@selector(collectionView:layout:estimatedSizeForFooterInSection:)]) {
+        size = [self.delegate collectionView:self.collectionView layout:self estimatedSizeForFooterInSection:section];
+    }
+    
+    return size;
 }
 
 - (BOOL)isHighLightedElementAtIndexPath:(NSIndexPath *)indexPath
@@ -355,18 +407,6 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
     }
     
     return resultValue;
-}
-
-- (NSInteger)totalGroupsInCollectionView
-{
-    NSInteger totalGroups = 0;
-    for (NSInteger section = 0; section < self.numberOfSections; section++) {
-        NSIndexPath *indexPath = [NSIndexPath indexPathForItem:0 inSection:section];
-        
-        totalGroups += [self totalGroupsAtIndexPath:indexPath];
-    }
-    
-    return totalGroups;
 }
 
 - (CGFloat)heightHeaderAtIndexPath:(NSIndexPath *)indexPath
