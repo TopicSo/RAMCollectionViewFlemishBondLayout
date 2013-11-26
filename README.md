@@ -2,7 +2,7 @@
 
 **RAMCollectionViewFlemishBondLayout** was written by **[Rafael Aguilar](https://twitter.com/rais38)** for **[Crows & Dogs](http://www.crowsanddogs.com)**.
 
-`RAMCollectionViewFlemishBondLayout` is a `UICollectionViewLayout` subclass for displaying cells in groups (highlighting one of them) with optional header and footer views. Highlighted cell occupy much of the space and the remaining cells occupy space equally. See the example screenshots for what this looks like.
+`RAMCollectionViewFlemishBondLayout` is a `UICollectionViewLayout` subclass for displaying cells in groups (highlighting one of them) with optional header/footer views and supported multiple sections. Highlighted cell occupy much of the space and the remaining cells occupy space equally. See the example screenshots for what this looks like.
 
 #Screenshots
 
@@ -48,7 +48,6 @@ All are optional.
 * `collectionView:layout:estimatedSizeForFooterInSection:`: Asks the delegate for the size of the footer view in the specified section.
 
 # Tasks List
-* Support for more than 1 section
 * Sticky header
 * Add Item Spacing
 
