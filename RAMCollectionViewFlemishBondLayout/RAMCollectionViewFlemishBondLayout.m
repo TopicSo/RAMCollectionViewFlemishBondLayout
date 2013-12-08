@@ -418,6 +418,10 @@ NSString *const RAMCollectionViewFlemishBondFooterKind = @"RAMCollectionViewFlem
 
 - (NSInteger)itemCountAtSection:(NSInteger)section
 {
+    if (self.numberOfSections == 0) {
+        return 0;
+    }
+    
     return [[self collectionView] numberOfItemsInSection:section];
 }
 
