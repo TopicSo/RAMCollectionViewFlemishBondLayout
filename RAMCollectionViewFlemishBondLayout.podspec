@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name     = 'RAMCollectionViewFlemishBondLayout'
-  s.version  = '1.1'
+  s.version  = '1.1.1'
   s.summary  = "UICollectionViewLayout for displaying cells in groups (highlighting one of them)."
   s.description  = "RAMCollectionViewFlemishBondLayout is a UICollectionViewLayout subclass for displaying cells in groups (highlighting one of them) with optional header/footer views and supported multiple sections. Highlighted cell occupy much of the space and the remaining cells occupy space equally."
   s.author   = {'Rafael Aguilar Martin' => 'rais38@gmail.com'}
